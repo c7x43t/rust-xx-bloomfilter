@@ -15,12 +15,12 @@ xx-bloomfilter = "0.10.0"
 Initialize with expected number of items and a wanted false positive rates
 
 ```rust
-    extern crate xx_bloomfilter;
-    extern crate rand;
+extern crate xx_bloomfilter;
+extern crate rand;
 
-    use xx_bloomfilter::Bloom;
+use xx_bloomfilter::Bloom;
 
-    fn main () {
+fn main () {
 
     let mut bloom = Bloom::new_with_rate(1_000_000, 1e-6);
     let item: u64 = rand::random();
