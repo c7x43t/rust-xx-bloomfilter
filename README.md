@@ -1,7 +1,7 @@
 ## xx-bloomfilter
 
 Hard fork of https://github.com/jedisct1/rust-bloom-filter. Reworked the most of the internals to make tbe algorithm
-cleaner and more efficient. Uses extremly fast [XxHash64](https://docs.rs/twox-hash/1.4.2/twox_hash/struct.XxHash64.html) for a hashing values.
+cleaner and more efficient. Uses extremly fast [XxHash64](https://docs.rs/twox-hash/1.4.2/twox_hash/struct.XxHash64.html) for hashing.
 
 ### Usage
 
