@@ -1,18 +1,15 @@
 [project]
-name = "bloomfilter"
-version = "1.1.0"
-authors = ["Frank Denis <github@pureftpd.org>"]
-description = "Bloom filter implementation"
-license = "ISC"
-homepage = "https://github.com/jedisct1/rust-bloom-filter"
-repository = "https://github.com/jedisct1/rust-bloom-filter"
-
-[lib]
-name = "bloomfilter"
-path = "src/bloomfilter/lib.rs"
+name = "xx-bloomfilter"
+version = "0.10.0"
+authors = ["Drazen Urch <drazen@urch.eu>"]
+description = "Bloom filter implementation using xx hash"
+license = "BSD-2"
+readme = "README.md"
+homepage = "https://github.com/durch/rust-xx-bloomfilter"
+repository = "https://github.com/durch/rust-xx-bloomfilter"
+keywords = ["bloom", "filter"]
 
 [dependencies]
-bit-vec = "~0.4"
-rand = "~0.3"
-siphasher = "^0.2.2"
-twox-hash = "^1.4.2"
+bit-vec = "^0.6"
+rand = "^0.7"
+twox-hash = "^1.4"
