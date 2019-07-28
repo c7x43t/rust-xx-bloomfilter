@@ -9,7 +9,7 @@ cleaner and more efficient. Uses extremly fast [XxHash64](https://docs.rs/twox-h
 
 ```toml
 [dependencies]
-xx-bloomfilter = "0.1.0"
+xx-bloomfilter = "0.10.0"
 ```
 
 Initialize with expected number of items and a wanted false positive rates
