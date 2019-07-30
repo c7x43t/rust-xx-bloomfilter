@@ -1,6 +1,6 @@
 [project]
 name = "xx-bloomfilter"
-version = "0.10.0"
+version = "0.11.0"
 authors = ["Drazen Urch <drazen@urch.eu>"]
 description = "Bloom filter implementation using xx hash"
 license = "ISC"
@@ -13,3 +13,5 @@ keywords = ["bloom", "filter"]
 bit-vec = "^0.6"
 rand = "^0.7"
 twox-hash = "^1.4"
+serde_derive = "^1.0"
+serde = "^1.0"

@@ -6,6 +6,9 @@
 extern crate bit_vec;
 extern crate rand;
 extern crate twox_hash;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde;
 
 use bit_vec::BitVec;
 use std::cmp;
@@ -18,7 +21,44 @@ pub struct Bloom {
     bitmap: BitVec,
     bitmap_size: u64,
     k: u64,
+    seeds: (u64, u64),
     xx: (XxHash64, XxHash64),
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct SerdeBloom {
+    bitmap: Vec<u8>,
+    bitmap_size: u64,
+    k: u64,
+    seeds: (u64, u64)
+}
+
+impl Default for Bloom {
+    fn default() -> Self {
+        Bloom::new_with_rate(1_000_000, 1e-6)
+    }
+}
+
+impl From<&Bloom> for SerdeBloom {
+    fn from(bloom: &Bloom) -> Self {
+        Self {
+            bitmap: bloom.bitmap.to_bytes(),
+            bitmap_size: bloom.bitmap_size,
+            k: bloom.k,
+            seeds: bloom.seeds
+        }
+    }
+}
+
+impl From<&SerdeBloom> for Bloom {
+    fn from(serde_bloom: &SerdeBloom) -> Self {
+        Bloom::from_existing(
+            serde_bloom.bitmap.as_slice(),
+            serde_bloom.bitmap_size,
+            serde_bloom.k,
+            serde_bloom.seeds
+        )
+    }
 }
 
 impl Bloom {
@@ -30,11 +70,13 @@ impl Bloom {
         let bitmap_size = (bitmap_size as u64) * 8u64;
         let k = Self::optimal_k_num(bitmap_size, items_count);
         let bitmap = BitVec::from_elem(bitmap_size as usize, false);
-        let xx = (Self::xx_new(), Self::xx_new());
+        let seeds = (rand::random(), rand::random());
+        let xx = (Self::xx_new(seeds.0), Self::xx_new(seeds.1));
         Self {
             bitmap,
             bitmap_size,
             k,
+            seeds,
             xx,
         }
     }
@@ -62,14 +104,11 @@ impl Bloom {
     }
 
     pub fn from_existing_struct(other: &Bloom) -> Self {
-//        let xx = [
-//            XxHash64::with_seed(other.xx()[0].seed),
-//            XxHash64::with_seed(other.xx()[1].seed)
-//        ];
         Self {
             bitmap: BitVec::from_bytes(other.bitmap().to_bytes().as_slice()),
             bitmap_size: other.bitmap_size,
             k: other.k,
+            seeds: other.seeds,
             xx: other.xx(),
         }
     }
@@ -81,12 +120,14 @@ impl Bloom {
         bitmap: &[u8],
         bitmap_size: u64,
         k: u64,
-        xx: (XxHash64, XxHash64),
+        seeds: (u64, u64)
     ) -> Self {
+        let xx = (Self::xx_new(seeds.0), Self::xx_new(seeds.1));
         Self {
             bitmap: BitVec::from_bytes(bitmap),
             bitmap_size,
             k,
+            seeds,
             xx,
         }
     }
@@ -195,8 +236,8 @@ impl Bloom {
         self.bitmap.clear()
     }
 
-    fn xx_new() -> XxHash64 {
-        XxHash64::with_seed(rand::random())
+    fn xx_new(seed: u64) -> XxHash64 {
+        XxHash64::with_seed(seed)
     }
 }
 
